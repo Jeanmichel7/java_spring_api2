@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import fr.lde.apitest.model.Employee;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, Long> {
+public interface EmployeeRepository
+    extends CrudRepository<Employee, Long> {
 
 }

@@ -12,7 +12,7 @@ services:
     # entrypoint: ./db/data.sql
 
   pgadmin:
-    container_name: pgadmin
+    container_name: pgadmin_api_test
     image: dpage/pgadmin4
     restart: always
     environment:

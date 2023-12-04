@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import fr.lde.apitest.model.Employee;
-import fr.lde.apitest.repository.EmployeeRepository;
+import fr.lde.apitest.domaine.model.Employee;
+import fr.lde.apitest.domaine.repository.EmployeeRepository;
+import fr.lde.apitest.exception.ConflitException;
+import fr.lde.apitest.exception.TestException;
+import fr.lde.apitest.exception.UserNotFoundException;
 import lombok.Data;
 // import lombok.extern.slf4j.Slf4j;
 
@@ -21,84 +27,81 @@ public class EmployeeService {
   @Autowired
   private EmployeeRepository employeeRepository;
 
-  public Iterable<Employee> getAllEmployees() {
-    return employeeRepository.findAll();
+  public Optional<Iterable<Employee>> getEmployees() {
+    Optional<Iterable<Employee>> employees = Optional.ofNullable(employeeRepository.findAll());
+    return employees;
   }
 
-  public ResponseEntity<?> getEmployeeById(Long id) {
-    Optional<Employee> employeeFound = employeeRepository.findById(id);
-
-    // log.info("test log : " + employeeFound.get());
-    // System.out.println("test sysout : " + employeeFound.get());
-
-    if (employeeFound.isPresent())
-      return ResponseEntity.ok(employeeFound.get());
-    else
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found with ID: " + id);
-    // return ResponseEntity.notFound().build();
-  }
-
-  // public ResponseEntity<Employee> getEmployee(final Long id) {
-  // return employeeRepository.findById(id);
+  // public Iterable<Employee> getAllEmployees() {
+  // return employeeRepository.findAll();
   // }
 
-  public Employee saveEmployee(Employee employee) {
+  public Employee getEmployeeById(Long id) throws UserNotFoundException, TestException {
+    Optional<Employee> employeeFound = employeeRepository.findById(id);
+
+    // return employeeRepository.findById(id)
+    // .orElseThrow(() -> new UserNotFoundException("Employee not found with ID: " +
+    // id));
+
+    if (employeeFound.isPresent()) {
+      Employee employee = employeeFound.get();
+      if (employee.getId() == 4)
+        throw new TestException();
+      return employee;
+    } else
+      throw new UserNotFoundException(id);
+  }
+
+  public Employee saveEmployee(Employee employee) throws ConflitException {
+    Optional<Employee> employeeFound = employeeRepository.findByMail(employee.getMail());
+    if (employeeFound.isPresent())
+      throw new ConflitException("Employee already exist with mail: " + employee.getMail());
+
     Employee savedEmployee = employeeRepository.save(employee);
     return savedEmployee;
   }
 
-  // public ResponseEntity<Employee> patchEmployee(Long id, Employee employeeData)
-  // {
-  // ResponseEntity<Employee> employeeFound = getEmployee(id);
+  public Employee patchEmployee(Long id, Employee employeeData)
+      throws UserNotFoundException, ConflitException {
+    System.out.println("employeeData : " + employeeData);
 
-  // return employeeFound.map(employee -> {
-  // if (employeeData.getFirstName() != null) {
-  // employee.setFirstName(employeeData.getFirstName());
-  // }
-  // if (employeeData.getLastName() != null) {
-  // employee.setLastName(employeeData.getLastName());
-  // }
-  // if (employeeData.getMail() != null) {
-  // employee.setMail(employeeData.getMail());
-  // }
-  // if (employeeData.getPassword() != null) {
-  // employee.setPassword(employeeData.getPassword());
-  // }
-  // Employee updatedEmployee = this.saveEmployee(employee);
-  // return ResponseEntity.ok(updatedEmployee);
-  // }).orElseGet(() -> ResponseEntity.notFound().build());
-  // }
+    Optional<Employee> employeeFound = employeeRepository.findById(id);
+    if (!employeeFound.isPresent())
+      throw new UserNotFoundException(id);
 
-  // public Employee patchEmployee(Long id, Employee employeeData) {
-  // // ResponseEntity<Employee> tets;
-  // Optional<Employee> employeeFound = getEmployeeById(id);
+    Employee employeeToUpdated = employeeFound.get();
+    // System.out.println("employee updated : " + employeeToUpdated);
 
-  // if (employeeFound.isPresent()) {
-  // Employee employeeToUpdate = employeeFound.get();
+    String firstName = employeeData.getFirstName();
+    if (firstName != null)
+      employeeToUpdated.setFirstName(firstName);
 
-  // String firstName = employeeData.getFirstName();
-  // if (firstName != null)
-  // employeeToUpdate.setFirstName(firstName);
+    String lastName = employeeData.getLastName();
+    if (lastName != null)
+      employeeToUpdated.setLastName(lastName);
 
-  // String lastName = employeeData.getLastName();
-  // if (lastName != null)
-  // employeeToUpdate.setLastName(lastName);
+    String mail = employeeData.getMail();
+    if (mail != null) {
+      Optional<Employee> employeeFoundByMail = employeeRepository.findByMail(mail);
+      if (employeeFoundByMail.isPresent())
+        throw new ConflitException("Email already used");
+      employeeToUpdated.setMail(mail);
+    }
 
-  // String mail = employeeData.getMail();
-  // if (mail != null)
-  // employeeToUpdate.setMail(mail);
+    String password = employeeData.getPassword();
+    if (password != null)
+      employeeToUpdated.setPassword(password);
 
-  // String password = employeeData.getPassword();
-  // if (password != null)
-  // employeeToUpdate.setPassword(password);
+    Employee employeeUpdated = employeeRepository.save(employeeToUpdated);
+    return employeeUpdated;
+  }
 
-  // return this.saveEmployee(employeeToUpdate);
-  // } else {
-  // return null;
-  // }
-  // }
+  public void deleteEmployee(final Long id) throws UserNotFoundException {
+    Optional<Employee> employeeFound = employeeRepository.findById(id);
 
-  public void deleteEmployee(final Long id) {
+    if (!employeeFound.isPresent())
+      throw new UserNotFoundException(id);
+
     employeeRepository.deleteById(id);
   }
 

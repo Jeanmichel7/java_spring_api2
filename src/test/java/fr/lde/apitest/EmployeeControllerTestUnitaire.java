@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import fr.lde.apitest.controler.EmployeeController;
-import fr.lde.apitest.model.Employee;
+import fr.lde.apitest.domaine.model.Employee;
 import fr.lde.apitest.service.EmployeeService;
 
 // @SpringBootTest

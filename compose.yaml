@@ -1,5 +1,6 @@
 services:
   postgres:
+    container_name: postgres
     image: "postgres:latest"
     environment:
       - "POSTGRES_DB=mydatabase"
@@ -9,6 +10,7 @@ services:
       - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # entrypoint: ./db/entrypoint.sh
     # volumes:
     #   - ./db:/docker-entrypoint-initdb.d
     # entrypoint: ./db/data.sql

@@ -3,6 +3,7 @@ package fr.lde.apitest.validator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
 import lombok.Setter;
 import lombok.Getter;
 

@@ -17,17 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.lde.apitest.domaine.model.Employee;
+import fr.lde.apitest.domain.model.Employee;
 import fr.lde.apitest.dto.EmployeeDTO;
 import fr.lde.apitest.mapper.EmployeeMapper;
 import fr.lde.apitest.service.EmployeeService;
 import fr.lde.apitest.validator.CreateEmployeeDTO;
 import fr.lde.apitest.validator.UpdateEmployeeDTO;
 
-// import jakarta.validation.Valid;
-
-// import org.checkerframework.checker.units.qual.m;
-// import org.modelmapper.ModelMapper;
+import jakarta.validation.Valid;
 
 @RestController
 @Validated
@@ -46,35 +43,32 @@ public class EmployeeController {
         Iterable<Employee> employees = employeeService.getEmployees().get();
 
         List<EmployeeDTO> er = new ArrayList<>();
-        for (Employee employee : employees) {
+        for (Employee employee : employees)
             er.add(mapper.toDto(employee));
-        }
         return er;
     }
 
     @GetMapping("/employee/{id}")
     @ResponseBody
-    public EmployeeDTO getEmployee(@PathVariable final Long ID) {
-        return mapper.toDto(employeeService.getEmployeeById(ID));
+    public EmployeeDTO getEmployee(@PathVariable final Long id) {
+        return mapper.toDto(employeeService.getEmployeeById(id));
     }
 
     @PostMapping("/employee")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    @Validated(CreateEmployeeDTO.class)
     public EmployeeDTO createEmployee(
-            @RequestBody CreateEmployeeDTO createEmployeeDTO) {
+            @Valid @RequestBody CreateEmployeeDTO createEmployeeDTO) {
         return mapper.toDto(employeeService.saveEmployee(mapper.toEntity(createEmployeeDTO)));
     }
 
     @ResponseBody
     @PatchMapping("/employee/{id}")
-    @Validated(UpdateEmployeeDTO.class)
     public EmployeeDTO patchEmployee(
-            @PathVariable final Long ID,
-            @RequestBody UpdateEmployeeDTO employeeDTO) {
+            @PathVariable final Long id,
+            @Valid @RequestBody UpdateEmployeeDTO employeeDTO) {
         return mapper.toDto(employeeService.patchEmployee(
-                ID,
+                id,
                 mapper.toEntity(employeeDTO)));
     }
 

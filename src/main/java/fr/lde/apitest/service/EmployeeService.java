@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.lde.apitest.domaine.model.Employee;
-import fr.lde.apitest.domaine.repository.EmployeeRepository;
+import fr.lde.apitest.domain.model.Employee;
+import fr.lde.apitest.domain.repository.EmployeeRepository;
 import fr.lde.apitest.exception.ConflitException;
 import fr.lde.apitest.exception.TestException;
 import fr.lde.apitest.exception.UserNotFoundException;

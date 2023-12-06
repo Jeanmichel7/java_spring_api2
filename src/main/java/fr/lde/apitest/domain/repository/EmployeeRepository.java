@@ -1,12 +1,12 @@
-package fr.lde.apitest.domaine.repository;
+package fr.lde.apitest.domain.repository;
 
 import java.util.Optional;
 
-import org.hibernate.annotations.processing.SQL;
+// import org.hibernate.annotations.processing.SQL;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import fr.lde.apitest.domaine.model.Employee;
+import fr.lde.apitest.domain.model.Employee;
 
 @Repository
 public interface EmployeeRepository

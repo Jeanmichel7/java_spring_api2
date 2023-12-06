@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.lde.apitest.domaine.model.Employee;
 import fr.lde.apitest.dto.EmployeeDTO;
+import fr.lde.apitest.mapper.EmployeeMapper;
 import fr.lde.apitest.service.EmployeeService;
 import fr.lde.apitest.validator.CreateEmployeeDTO;
 import fr.lde.apitest.validator.UpdateEmployeeDTO;
 
-import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
+// import jakarta.validation.Valid;
+
+// import org.checkerframework.checker.units.qual.m;
+// import org.modelmapper.ModelMapper;
 
 @RestController
 @Validated
@@ -32,7 +35,7 @@ import org.modelmapper.ModelMapper;
 public class EmployeeController {
 
     @Autowired
-    private ModelMapper modelMapper;
+    private EmployeeMapper mapper;
 
     @Autowired
     private EmployeeService employeeService;
@@ -44,47 +47,41 @@ public class EmployeeController {
 
         List<EmployeeDTO> er = new ArrayList<>();
         for (Employee employee : employees) {
-            EmployeeDTO employeeDto = modelMapper.map(employee, EmployeeDTO.class);
-            er.add(employeeDto);
+            er.add(mapper.toDto(employee));
         }
         return er;
     }
 
     @GetMapping("/employee/{id}")
     @ResponseBody
-    public EmployeeDTO getEmployee(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        EmployeeDTO r = modelMapper.map(employee, EmployeeDTO.class);
-        // EmployeeDTO r = new EmployeeDTO().convertToDTO(employee);
-        return r;
+    public EmployeeDTO getEmployee(@PathVariable final Long ID) {
+        return mapper.toDto(employeeService.getEmployeeById(ID));
     }
 
     @PostMapping("/employee")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
+    @Validated(CreateEmployeeDTO.class)
     public EmployeeDTO createEmployee(
-            @Valid @RequestBody CreateEmployeeDTO employeeDTO) {
-        Employee employeeToCreate = modelMapper.map(employeeDTO, Employee.class);
-        Employee employeeCreated = employeeService.saveEmployee(employeeToCreate);
-        EmployeeDTO employee = modelMapper.map(employeeCreated, EmployeeDTO.class);
-        return employee;
+            @RequestBody CreateEmployeeDTO createEmployeeDTO) {
+        return mapper.toDto(employeeService.saveEmployee(mapper.toEntity(createEmployeeDTO)));
     }
 
     @ResponseBody
     @PatchMapping("/employee/{id}")
+    @Validated(UpdateEmployeeDTO.class)
     public EmployeeDTO patchEmployee(
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateEmployeeDTO employeeDataDTO) {
-        Employee employeeToUpdate = modelMapper.map(employeeDataDTO, Employee.class);
-        Employee updatedEmployee = employeeService.patchEmployee(id, employeeToUpdate);
-        EmployeeDTO employeeDto = modelMapper.map(updatedEmployee, EmployeeDTO.class);
-        return employeeDto;
+            @PathVariable final Long ID,
+            @RequestBody UpdateEmployeeDTO employeeDTO) {
+        return mapper.toDto(employeeService.patchEmployee(
+                ID,
+                mapper.toEntity(employeeDTO)));
     }
 
     @DeleteMapping("/employee/{id}")
     public void deleteEmployee(
-            @PathVariable("id") final Long id) {
-        employeeService.deleteEmployee(id);
+            @PathVariable("id") final Long ID) {
+        employeeService.deleteEmployee(ID);
     }
 
 }

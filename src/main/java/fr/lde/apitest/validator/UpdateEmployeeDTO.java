@@ -1,12 +1,13 @@
 package fr.lde.apitest.validator;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 
-@Data
+@Getter
+@Setter
 public class UpdateEmployeeDTO {
   @Size(min = 2, max = 32, message = "La longueur du nom doit être entre 2 et 32 caractères")
   private String firstName;

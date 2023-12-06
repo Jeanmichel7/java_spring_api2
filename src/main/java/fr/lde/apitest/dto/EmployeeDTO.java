@@ -2,8 +2,12 @@ package fr.lde.apitest.dto;
 
 // import fr.lde.apitest.domaine.model.Employee;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+// @Data
+@Getter
+@Setter
 public class EmployeeDTO {
   private Long id;
   private String firstName;

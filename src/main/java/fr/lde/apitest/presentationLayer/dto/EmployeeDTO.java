@@ -1,4 +1,4 @@
-package fr.lde.apitest.dto;
+package fr.lde.apitest.presentationLayer.dto;
 
 import lombok.Getter;
 import lombok.Setter;

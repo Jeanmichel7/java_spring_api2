@@ -1,4 +1,4 @@
-package fr.lde.apitest.controler;
+package fr.lde.apitest.presentationLayer.controler;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.lde.apitest.domain.model.Employee;
-import fr.lde.apitest.dto.EmployeeDTO;
-import fr.lde.apitest.mapper.EmployeeMapper;
-import fr.lde.apitest.service.EmployeeService;
-import fr.lde.apitest.validator.CreateEmployeeDTO;
-import fr.lde.apitest.validator.UpdateEmployeeDTO;
-
+import fr.lde.apitest.businessLayer.service.EmployeeService;
+import fr.lde.apitest.domainLayer.model.Employee;
+import fr.lde.apitest.presentationLayer.dto.EmployeeDTO;
+import fr.lde.apitest.presentationLayer.mapper.EmployeeMapper;
+import fr.lde.apitest.presentationLayer.validator.CreateEmployeeDTO;
+import fr.lde.apitest.presentationLayer.validator.UpdateEmployeeDTO;
 import jakarta.validation.Valid;
 
 @RestController

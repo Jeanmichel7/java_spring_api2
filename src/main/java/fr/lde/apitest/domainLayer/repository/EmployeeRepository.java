@@ -1,4 +1,4 @@
-package fr.lde.apitest.domain.repository;
+package fr.lde.apitest.domainLayer.repository;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import fr.lde.apitest.domain.model.Employee;
+import fr.lde.apitest.domainLayer.model.Employee;
 
 @Repository
 public interface EmployeeRepository

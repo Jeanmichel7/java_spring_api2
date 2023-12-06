@@ -1,13 +1,13 @@
-package fr.lde.apitest.mapper;
+package fr.lde.apitest.presentationLayer.mapper;
 
 // import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 // import org.mapstruct.Mapping;
 
-import fr.lde.apitest.domain.model.Employee;
-import fr.lde.apitest.dto.EmployeeDTO;
-import fr.lde.apitest.validator.CreateEmployeeDTO;
-import fr.lde.apitest.validator.UpdateEmployeeDTO;
+import fr.lde.apitest.domainLayer.model.Employee;
+import fr.lde.apitest.presentationLayer.dto.EmployeeDTO;
+import fr.lde.apitest.presentationLayer.validator.CreateEmployeeDTO;
+import fr.lde.apitest.presentationLayer.validator.UpdateEmployeeDTO;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {

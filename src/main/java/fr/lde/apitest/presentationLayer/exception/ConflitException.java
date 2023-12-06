@@ -1,4 +1,4 @@
-package fr.lde.apitest.exception;
+package fr.lde.apitest.presentationLayer.exception;
 
 public class ConflitException extends RuntimeException {
   public ConflitException(String message) {

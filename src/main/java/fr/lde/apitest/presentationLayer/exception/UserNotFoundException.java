@@ -1,4 +1,4 @@
-package fr.lde.apitest.exception;
+package fr.lde.apitest.presentationLayer.exception;
 
 public class UserNotFoundException extends RuntimeException {
   public UserNotFoundException(String message) {

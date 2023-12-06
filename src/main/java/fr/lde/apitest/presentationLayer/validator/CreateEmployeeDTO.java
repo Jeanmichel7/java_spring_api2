@@ -1,4 +1,4 @@
-package fr.lde.apitest.validator;
+package fr.lde.apitest.presentationLayer.validator;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

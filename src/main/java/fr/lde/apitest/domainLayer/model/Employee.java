@@ -1,4 +1,4 @@
-package fr.lde.apitest.domain.model;
+package fr.lde.apitest.domainLayer.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

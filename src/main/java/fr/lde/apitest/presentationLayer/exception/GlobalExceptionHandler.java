@@ -1,4 +1,4 @@
-package fr.lde.apitest.exception;
+package fr.lde.apitest.presentationLayer.exception;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
-// @Slf4j
+@Slf4j
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(UserNotFoundException.class)
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-    // log.error("Validation error: " + ex);
+    log.error("Validation error: " + ex);
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult().getAllErrors().forEach((error) -> {
       String fieldName = ((FieldError) error).getField();

@@ -12,7 +12,7 @@ import fr.lde.apitest.domaine.model.Employee;
 public interface EmployeeRepository
         extends CrudRepository<Employee, Long> {
 
-    public Optional<Employee> findByMail(String email);
+    public Optional<Employee> findByEmail(String email);
 
     // @SQL("SELECT * FROM Employee")
     // public Employee myPersonal(String email);

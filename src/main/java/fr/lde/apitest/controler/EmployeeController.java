@@ -2,13 +2,14 @@ package fr.lde.apitest.controler;
 
 import java.lang.annotation.Documented;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.lde.apitest.domaine.model.Employee;
+import fr.lde.apitest.dto.EmployeeResponseDTO;
 import fr.lde.apitest.service.EmployeeService;
+import fr.lde.apitest.validator.CreateEmployeeDTO;
+import jakarta.validation.Valid;
 
 // import jakarta.persistence.EntityNotFoundException;
 
 @RestController
+@Validated
 @RequestMapping("/api")
 public class EmployeeController {
 
@@ -31,9 +36,15 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @GetMapping("/employees")
-    public ResponseEntity<Iterable<Employee>> getEmployees() {
+    public ResponseEntity<Iterable<EmployeeResponseDTO>> getEmployees() {
         Iterable<Employee> employees = employeeService.getEmployees().get();
-        return ResponseEntity.ok(employees);
+
+        List<EmployeeResponseDTO> er = new ArrayList<>();
+        for (Employee employee : employees) {
+            er.add(new EmployeeResponseDTO().convertToDTO(employee));
+        }
+        return ResponseEntity.ok(er);
+
         // return employeeService.getEmployees()
         // .map(ResponseEntity::ok)
         // .orElseThrow(() -> new EntityNotFoundException(
@@ -47,9 +58,11 @@ public class EmployeeController {
     // }
 
     @GetMapping("/employee/{id}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Long id) {
+    public ResponseEntity<EmployeeResponseDTO> getEmployee(@PathVariable Long id) {
         Employee employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+        EmployeeResponseDTO r = new EmployeeResponseDTO().convertToDTO(employee);
+        return ResponseEntity.ok(r);
+
         // return employeeService.getEmployeeById(id);
         // .map(ResponseEntity::ok)
         // .orElseThrow(() -> new EntityNotFoundException(
@@ -58,9 +71,9 @@ public class EmployeeController {
     }
 
     @PostMapping("/employee")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        System.out.println("data recu : " + employee);
-        Employee truc = employeeService.saveEmployee(employee);
+    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody CreateEmployeeDTO employeeDTO) {
+        // System.out.println("data recu : " + employeeDTO);
+        Employee truc = employeeService.saveEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(truc);
     }
 

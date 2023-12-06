@@ -16,7 +16,10 @@ import fr.lde.apitest.domaine.repository.EmployeeRepository;
 import fr.lde.apitest.exception.ConflitException;
 import fr.lde.apitest.exception.TestException;
 import fr.lde.apitest.exception.UserNotFoundException;
+import fr.lde.apitest.validator.CreateEmployeeDTO;
 import lombok.Data;
+
+// import org.modelmapper.ModelMapper;
 // import lombok.extern.slf4j.Slf4j;
 
 @Data
@@ -52,10 +55,17 @@ public class EmployeeService {
       throw new UserNotFoundException(id);
   }
 
-  public Employee saveEmployee(Employee employee) throws ConflitException {
-    Optional<Employee> employeeFound = employeeRepository.findByMail(employee.getMail());
+  public Employee saveEmployee(CreateEmployeeDTO employeeDTO) throws ConflitException {
+
+    Employee employee = new Employee();
+    employee.setFirstName(employeeDTO.getFirstName());
+    employee.setLastName(employeeDTO.getLastName());
+    employee.setEmail(employeeDTO.getEmail());
+    employee.setPassword(employeeDTO.getPassword());
+
+    Optional<Employee> employeeFound = employeeRepository.findByEmail(employee.getEmail());
     if (employeeFound.isPresent())
-      throw new ConflitException("Employee already exist with mail: " + employee.getMail());
+      throw new ConflitException("Employee already exist with mail: " + employee.getEmail());
 
     Employee savedEmployee = employeeRepository.save(employee);
     return savedEmployee;
@@ -80,12 +90,12 @@ public class EmployeeService {
     if (lastName != null)
       employeeToUpdated.setLastName(lastName);
 
-    String mail = employeeData.getMail();
+    String mail = employeeData.getEmail();
     if (mail != null) {
-      Optional<Employee> employeeFoundByMail = employeeRepository.findByMail(mail);
+      Optional<Employee> employeeFoundByMail = employeeRepository.findByEmail(mail);
       if (employeeFoundByMail.isPresent())
         throw new ConflitException("Email already used");
-      employeeToUpdated.setMail(mail);
+      employeeToUpdated.setEmail(mail);
     }
 
     String password = employeeData.getPassword();

@@ -1,6 +1,7 @@
 package fr.lde.apitest.businessLayer.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,14 @@ import lombok.Data;
 // @Slf4j
 public class EmployeeService {
 
-  @Autowired
   private EmployeeRepository employeeRepository;
 
-  public Optional<Iterable<Employee>> getEmployees() {
-    Optional<Iterable<Employee>> employees = Optional.ofNullable(employeeRepository.findAll());
-    return employees;
+  public EmployeeService(EmployeeRepository employeeRepository) {
+    this.employeeRepository = employeeRepository;
+  }
+
+  public List<Employee> getEmployees() {
+    return employeeRepository.findAll();
   }
 
   public Employee getEmployeeById(Long id)
@@ -34,10 +37,9 @@ public class EmployeeService {
     if (!employeeFound.isPresent())
       throw new UserNotFoundException(id);
 
-    Employee employee = employeeFound.get();
-    if (employee.getId() == 4)
+    if (employeeFound.get().getId() == 4)
       throw new TestException();
-    return employee;
+    return employeeFound.get();
   }
 
   public Employee saveEmployee(Employee employee)
@@ -45,7 +47,7 @@ public class EmployeeService {
 
     Optional<Employee> employeeFound = employeeRepository.findByEmail(employee.getEmail());
     if (employeeFound.isPresent())
-      throw new ConflitException("Employee already exist with mail: " + employee.getEmail());
+      throw new ConflitException("Employee already exist with mail! " + employee.getEmail());
 
     Employee savedEmployee = employeeRepository.save(employee);
     return savedEmployee;

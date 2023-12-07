@@ -4,9 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Main class of the application.
- */
+// import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+// @EnableSwagger2
 @SpringBootApplication
 public class ApitestApplication
 		implements CommandLineRunner {
@@ -19,5 +19,4 @@ public class ApitestApplication
 	public void run(String... args) throws Exception {
 		System.out.println("App is running... Does it work?");
 	}
-
 }

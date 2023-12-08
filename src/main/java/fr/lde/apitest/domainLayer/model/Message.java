@@ -30,7 +30,7 @@ public class Message {
   private String message;
 
   @ManyToOne
-  @JoinColumn(name = "employee_id", nullable = false)
+  @JoinColumn(name = "employee_id")
   private Employee author;
 
   @Column(name = "date", nullable = false)
